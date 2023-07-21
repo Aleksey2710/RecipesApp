@@ -17,6 +17,9 @@ import pro.sky.recipesapp.services.FileService;
 
 import java.io.*;
 
+/**
+ * Контроллер для работы с файлами
+ */
 @RestController
 @RequestMapping("/files")
 @Tag(name = "Файлы", description = "Загрузка и выгрузка файлов в формате .json")
@@ -30,7 +33,6 @@ public class FilesController {
         this.fileRecipeService = fileRecipeService;
         this.fileIngredientService = fileIngredientService;
     }
-
 
     @GetMapping(value = "/export", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
@@ -46,6 +48,7 @@ public class FilesController {
                     description = "Файл не создан"
             )})
     public ResponseEntity<InputStreamResource> downloadDataFile() throws FileNotFoundException { //Выгрузка файлов
+
         File file = fileRecipeService.getDataFile();
 
         if (file.exists()) {
@@ -60,6 +63,7 @@ public class FilesController {
             return ResponseEntity.noContent().build(); //Статус 204
         }
     }
+
     @PostMapping(value = "/import/recipe", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Загрузка файлов рецептов"
@@ -74,7 +78,9 @@ public class FilesController {
                     description = "Файл рецептов не загружен"
             )})
     public ResponseEntity<Void> upLoadDataRecipeFile(@RequestParam MultipartFile file) { //Генерация файла, загрузка
+
         fileRecipeService.cleanDataFile(); //Удаляем dataRecipe, создаем новый
+
         try {
             fileRecipeService.upLoadDataRecipeFile(file);
             return ResponseEntity.ok().build();
@@ -83,6 +89,7 @@ public class FilesController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
     @PostMapping(value = "/import/ingredient", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Загрузка файлов ингредиентов"
@@ -97,7 +104,9 @@ public class FilesController {
                     description = "Файл ингредиентов не загружен"
             )})
     public ResponseEntity<Void> upLoadDataIngredientFile(@RequestParam MultipartFile file) { //Генерация файла, загрузка
+
         fileIngredientService.cleanDataFile(); //Удаляем dataIngredient, создаем новый
+
         try {
             fileIngredientService.upLoadDataRecipeFile(file);
             return ResponseEntity.ok().build();

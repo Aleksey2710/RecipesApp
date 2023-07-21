@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ingredient {
+
     private String nameIngredient;
     private int countIngredients;
     private String countMeasurement;

@@ -18,7 +18,6 @@ import java.util.Map;
 /**
  * Бизнес-логика для ингредиентов.
  */
-
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
@@ -29,11 +28,11 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private long idIngredient = 1L;
-
     private Map<Long, Ingredient> ingredientMap = new LinkedHashMap<>();
 
     @PostConstruct
     private void init() {
+
         try {
             readFromFile();
         } catch (Exception e) {
@@ -43,6 +42,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public long addNewIngredient(Ingredient ingredient) { //Создаем новый ингредиент.
+
         ingredientMap.put(idIngredient, ingredient);
         saveToFile();
         return idIngredient++;
@@ -50,17 +50,20 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public Ingredient getIngredientById(long idIngredient) { //Получаем ингредиент по его id.
+
         return ingredientMap.get(idIngredient);
     }
 
     @Override
     public Collection<Ingredient> getAllIngredients() { //Получаем список всех ингредиентов.
+
         return ingredientMap.values();
     }
 
     @Override
     public Ingredient editIngredient(long idIngredient,
                                      Ingredient ingredient) { //Редактируем ингредиент по его id.
+
         if (ingredientMap.containsKey(idIngredient)) {
             ingredientMap.put(idIngredient, ingredient);
             saveToFile();
@@ -71,6 +74,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     @Override
     public boolean deleteIngredient(long idIngredient) { //Удаляем ингредиент по его id.
+
         if (ingredientMap.containsKey(idIngredient)) {
             ingredientMap.remove(idIngredient);
             saveToFile();
@@ -80,6 +84,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private void saveToFile() {
+
         try {
             String json = new ObjectMapper().writeValueAsString(ingredientMap);
             fileService.saveToFile(json);
@@ -89,6 +94,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     private void readFromFile() {
+
         try {
             String json = fileService.readFromFile();
             ingredientMap = new ObjectMapper().readValue(json, new TypeReference<HashMap<Long, Ingredient>>() {

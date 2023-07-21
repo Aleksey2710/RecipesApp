@@ -22,19 +22,20 @@ import java.time.Month;
 import java.util.Collection;
 
 /**
- * Контроллер для рецептов.
+ * Контроллер для работы с рецептами.
  */
-
 @RestController
 @RequestMapping("/recipes")
 @Tag(name = "Рецепты", description = "CRUD-операции и другие эндпоинты для работы с рецептами")
 public class RecipeController {
+
     private final RecipeService recipeService;
 
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
 
+    @PostMapping
     @Operation(
             summary = "Создаем новый рецепт."
     )
@@ -43,12 +44,13 @@ public class RecipeController {
                     responseCode = "200",
                     description = "Рецепт был добавлен"
             )})
-    @PostMapping
     public ResponseEntity<Long> addNewRecipe(@RequestBody Recipe recipe) { //Создаем новый рецепт.
+
         long id = recipeService.addNewRecipe(recipe);
         return ResponseEntity.ok(id);
     }
 
+    @GetMapping("/{id}")
     @Operation(
             summary = "Получаем рецепт по его id."
     )
@@ -61,8 +63,8 @@ public class RecipeController {
                     responseCode = "404",
                     description = "Рецепт не найден"
             )})
-    @GetMapping("/{id}")
     public ResponseEntity<Recipe> getRecipe(@PathVariable long id) { //Получаем рецепт по его id.
+
         Recipe recipe = recipeService.getRecipeById(id);
         if (ObjectUtils.isEmpty(recipe)) {
             return ResponseEntity.notFound().build();
@@ -70,6 +72,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipe);
     }
 
+    @GetMapping
     @Operation(
             summary = "Получаем список всех рецептов."
     )
@@ -78,12 +81,13 @@ public class RecipeController {
                     responseCode = "200",
                     description = "Рецепты были найдены"
             )})
-    @GetMapping
     public ResponseEntity<Collection<Recipe>> getAllRecipes() { //Получаем список всех рецептов.
+
         Collection<Recipe> allRecipes = recipeService.getAllRecipes();
         return ResponseEntity.ok(allRecipes);
     }
 
+    @PutMapping("/{id}")
     @Operation(
             summary = "Редактируем рецепт по его id."
     )
@@ -96,9 +100,9 @@ public class RecipeController {
                     responseCode = "404",
                     description = "Рецепт не отредактирован"
             )})
-    @PutMapping("/{id}")
     public ResponseEntity<Recipe> editRecipe(@PathVariable long id,
                                              @RequestBody Recipe recipe) {//Редактируем рецепт по его id.
+
         recipe = recipeService.editRecipeById(id, recipe);
         if (recipe == null) {
             return ResponseEntity.notFound().build();
@@ -106,6 +110,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipe);
     }
 
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаляем рецепт по его id."
     )
@@ -118,17 +123,18 @@ public class RecipeController {
                     responseCode = "404",
                     description = "Рецепт не удален"
             )})
-    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRecipe(@PathVariable long id) { //Удаляем рецепт по его id.
+
         if (recipeService.deleteRecipe(id)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping(value = "/getAllRecipe")
     @Operation(
             summary = "Загружаем список рецептов в формате txt"
     )
-    @GetMapping(value = "/getAllRecipe")
     public ResponseEntity<Object> getAllRecipesPrint() {
 
         try {

@@ -21,7 +21,6 @@ import java.util.*;
 /**
  * Бизнес-логика для рецептов.
  */
-
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
@@ -32,12 +31,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private long idRecipe = 1L;
-
     private Map<Long, Recipe> recipeMap = new LinkedHashMap<>();
-
 
     @PostConstruct
     private void init() {
+
         try {
             readFromFile();
         } catch (Exception e) {
@@ -47,6 +45,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public long addNewRecipe(Recipe recipe) { //Создаем новый рецепт.
+
         recipeMap.put(idRecipe, recipe);
         saveToFile();
         return idRecipe++;
@@ -54,17 +53,19 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe getRecipeById(long idRecipe) { //Получаем рецепт по его id.
+
         return recipeMap.get(idRecipe);
     }
 
     @Override
     public Collection<Recipe> getAllRecipes() { //Получаем список всех рецептов.
-        return recipeMap.values();
 
+        return recipeMap.values();
     }
 
     @Override
     public Recipe editRecipeById(long idRecipe, Recipe recipe) { //Редактируем рецепт по его id.
+
         if (recipeMap.containsKey(idRecipe)) {
             recipeMap.put(idRecipe, recipe);
             saveToFile();
@@ -75,6 +76,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public boolean deleteRecipe(long idRecipe) { //Удаляем рецепт по его id.
+
         if (recipeMap.containsKey(idRecipe)) {
             recipeMap.remove(idRecipe);
             saveToFile();
@@ -84,6 +86,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void saveToFile() {
+
         try {
             String json = new ObjectMapper().writeValueAsString(recipeMap);
             fileService.saveToFile(json);
@@ -93,6 +96,7 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private void readFromFile() {
+
         try {
             String json = fileService.readFromFile();
             recipeMap = new ObjectMapper().readValue(json, new TypeReference<HashMap<Long, Recipe>>() {
@@ -111,29 +115,28 @@ public class RecipeServiceImpl implements RecipeService {
 
             for (Recipe recipe : recipeMap.values()) {
 
-                writer.append("\n").append(recipe.getNameRecipe()).append("\n");
+                writer.append("\n\r").append(recipe.getNameRecipe()).append("\n\r");
 
-                writer.append("\n Время приготовления: " + recipe.getCookingTime()
+                writer.append("\n\r Время приготовления: " + recipe.getCookingTime()
                         + " " + recipe.getTimeMeasurement());
 
-                writer.append("\n Ингредиенты: \n");
+                writer.append("\n\r Ингредиенты: \n\r");
 
                 for (Ingredient ingredient : recipe.getIngredients()) {
                     writer.append(symbol).append(ingredient.getNameIngredient() + " "
                             + ingredient.getCountIngredients()
-                            + ingredient.getCountMeasurement() + "\n");
+                            + ingredient.getCountMeasurement() + "\n\r");
                 }
 
-                writer.append("\n Инструкция приготовления: \n");
+                writer.append("\n\r Инструкция приготовления: \n\r");
 
                 for (String step : recipe.getSteps()) {
-                    writer.append(symbol).append(step).append("\n");
+                    writer.append(symbol).append(step).append("\n\r");
                 }
 
-                writer.append("\n");
+                writer.append("\n\r");
             }
         }
         return path;
     }
-
 }

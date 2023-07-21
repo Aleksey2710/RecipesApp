@@ -17,20 +17,15 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
  */
 @Service
 public class FileRecipeServiceImpl implements FileService {
+
     @Value("${pathToDataRecipeFile}")
     private String dataFilePath;
     @Value("${nameOfDataRecipeFile}")
     private String dataFileName;
 
-
-    /**
-     * Сохранение рецепта в файл
-     *
-     * @param json файл для сохранения (записи)
-     * @return подтверждение сохранения рецепта в файл
-     */
     @Override
     public boolean saveToFile(String json) {
+
         try {
             Files.writeString(Path.of(dataFilePath, dataFileName), json);
             return true;
@@ -40,13 +35,9 @@ public class FileRecipeServiceImpl implements FileService {
         }
     }
 
-    /**
-     * Читаем (получаем) рецепт из файла
-     *
-     * @return Получаем прочитанный файл
-     */
     @Override
     public String readFromFile() {
+
         try {
             return Files.readString(Path.of(dataFilePath, dataFileName));
         } catch (IOException e) {
@@ -57,6 +48,7 @@ public class FileRecipeServiceImpl implements FileService {
 
     @Override
     public boolean cleanDataFile() {
+
         try {
             Path path = Path.of(dataFilePath, dataFileName);
             Files.deleteIfExists(path);
@@ -70,12 +62,14 @@ public class FileRecipeServiceImpl implements FileService {
 
     @Override
     public File getDataFile() {
+
         return new File(dataFilePath + "/" + dataFileName);
     }
 
     @Override
     public void upLoadDataRecipeFile(MultipartFile file) throws IOException {
-        Path filePath = Path.of(dataFilePath,file.getOriginalFilename());
+
+        Path filePath = Path.of(dataFilePath, file.getOriginalFilename());
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
 
@@ -93,8 +87,10 @@ public class FileRecipeServiceImpl implements FileService {
 //            e.printStackTrace();
 //        }
     }
-@Override
+
+    @Override
     public Path createTempFile(String suffix) {
+
         try {
             return Files.createTempFile(Path.of(dataFilePath), "tempFile", suffix);
         } catch (IOException e) {

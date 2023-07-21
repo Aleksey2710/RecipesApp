@@ -14,19 +14,20 @@ import pro.sky.recipesapp.services.IngredientService;
 import java.util.Collection;
 
 /**
- * Контроллер для ингредиентов.
+ * Контроллер для работы с ингредиентами.
  */
-
 @RestController
 @RequestMapping("/ingredients")
 @Tag(name = "Ингредиенты", description = "CRUD-операции и другие эндпоинты для работы с ингредиентами")
 public class IngredientController {
+
     private final IngredientService ingredientService;
 
     public IngredientController(IngredientService ingredientService) {
         this.ingredientService = ingredientService;
     }
 
+    @PostMapping
     @Operation(
             summary = "Создаем новый ингредиент."
     )
@@ -35,12 +36,13 @@ public class IngredientController {
                     responseCode = "200",
                     description = "Ингредиент был добавлен"
             )})
-    @PostMapping
     public ResponseEntity<Long> addNewIngredient(@RequestBody Ingredient ingredient) { //Создаем новый ингредиент.
+
         long id = ingredientService.addNewIngredient(ingredient);
         return ResponseEntity.ok(id);
     }
 
+    @GetMapping("/{id}")
     @Operation(
             summary = "Получаем ингредиент по его id."
     )
@@ -53,8 +55,8 @@ public class IngredientController {
                     responseCode = "404",
                     description = "Ингредиент не найден"
             )})
-    @GetMapping("/{id}")
     public ResponseEntity<Ingredient> getIngredient(@PathVariable long id) { //Получаем ингредиент по его id.
+
         Ingredient ingredient = ingredientService.getIngredientById(id);
         if (ingredient == null) {
             return ResponseEntity.notFound().build();
@@ -62,6 +64,7 @@ public class IngredientController {
         return ResponseEntity.ok(ingredient);
     }
 
+    @GetMapping
     @Operation(
             summary = "Получаем список всех ингредиентов."
     )
@@ -70,12 +73,13 @@ public class IngredientController {
                     responseCode = "200",
                     description = "Ингредиенты были найдены"
             )})
-    @GetMapping
     public ResponseEntity<Collection<Ingredient>> getAllIngredients() { //Получаем список всех ингредиентов.
+
         Collection<Ingredient> ingredients = ingredientService.getAllIngredients();
         return ResponseEntity.ok(ingredients);
     }
 
+    @PutMapping("/{id}")
     @Operation(
             summary = "Редактируем ингредиент по его id."
     )
@@ -88,9 +92,9 @@ public class IngredientController {
                     responseCode = "404",
                     description = "Ингредиент не отредактирован"
             )})
-    @PutMapping("/{id}")
     public ResponseEntity<Ingredient> editIngredient(@PathVariable long id,
                                                      @RequestBody Ingredient ingredient) { //Редактируем ингредиент по его id.
+
         ingredient = ingredientService.editIngredient(id, ingredient);
         if (ingredient == null) {
             return ResponseEntity.notFound().build();
@@ -98,6 +102,7 @@ public class IngredientController {
         return ResponseEntity.ok(ingredient);
     }
 
+    @DeleteMapping("/{id}")
     @Operation(
             summary = "Удаляем ингредиент по его id."
     )
@@ -110,8 +115,8 @@ public class IngredientController {
                     responseCode = "404",
                     description = "Ингредиент не удален"
             )})
-    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIngredient(@PathVariable long id) { //Удаляем ингредиент по его id.
+
         if (ingredientService.deleteIngredient(id)) {
             return ResponseEntity.ok().build();
         }

@@ -4,7 +4,11 @@ import pro.sky.recipesapp.model.Ingredient;
 
 import java.util.Collection;
 
+/**
+ * Сервис по работе с ингредиентами
+ */
 public interface IngredientService {
+
     long addNewIngredient(Ingredient ingredient);
 
     Ingredient getIngredientById(long idIngredient);

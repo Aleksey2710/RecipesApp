@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Recipe {
+
     private String nameRecipe;
     private int cookingTime;
     private String timeMeasurement;
